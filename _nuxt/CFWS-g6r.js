@@ -1,0 +1,1 @@
+import{a as n,c,t as s,d as l,o as p,r as m,n as u}from"./DriHa7Jc.js";const i={base:""},_={__name:"ProseEm",props:{class:{type:String,required:!1}},setup(e){const a=e,t=n(),o=c(()=>s({extend:s(i),...t.ui?.prose?.em||{}}));return(r,d)=>(p(),l("em",{class:u(o.value({class:a.class}))},[m(r.$slots,"default")],2))}};export{_ as default};
