@@ -27,7 +27,6 @@ export default defineNuxtConfig({
   },
 
   css: [
-    '@/assets/scss/main.scss',
     '@/assets/scss/global.css',
   ],
 
@@ -35,8 +34,8 @@ export default defineNuxtConfig({
     build: {
       markdown: {
         highlight: {
-          preload: ['python'],
-          theme: 'monokai',
+          langs: ['py'],
+          theme: 'one-dark-pro',
         },
       },
     },

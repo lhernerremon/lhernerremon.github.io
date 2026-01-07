@@ -9,7 +9,7 @@ const { formatDate } = useDayjsUtils()
 </script>
 
 <template>
-  <UCard variant="soft">
+  <UCard variant="subtle">
     <template #header>
       <NuxtLink :to="blog.path" class="text-xl text-primary">
         {{ blog.title }}
@@ -45,30 +45,6 @@ const { formatDate } = useDayjsUtils()
         </div>
       </section>
     </section>
-
-    <!-- <VCardText class="ma-6 mt-2">
-      <div class="d-flex flex-column" style="gap: 8px">
-        <div class="d-flex align-center">
-          <VIcon>mdi-calendar</VIcon>
-          <span>&nbsp;{{ dateFormated }}</span>
-        </div>
-        <div class="d-flex align-center">
-          <VIcon>mdi-clock-time-eight-outline</VIcon>
-          <span>&nbsp;{{ post?.time }}</span>
-        </div>
-        <div class="tags-container d-flex mt-">
-          <VChip
-            v-for="tag in post.tags"
-            :key="tag"
-            label
-            variant="tonal"
-            color="primary"
-          >
-            {{ tag }}
-          </VChip>
-        </div>
-      </div>
-    </VCardText> -->
   </UCard>
 </template>
 

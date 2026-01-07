@@ -4,3 +4,7 @@
 @theme {
   --font-sans: "Poppins", apple-system, Ubuntu, Cantarell, sans-serif;
 }
+
+.dark {
+  --shiki-default: #00dc82;
+}
