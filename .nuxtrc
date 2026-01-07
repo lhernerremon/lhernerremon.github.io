@@ -1,0 +1,6 @@
+ssr=false
+devtools.enabled=true
+compatibilityDate="2025-07-15"
+telemetry=false
+
+eslint.config.stylistic = true

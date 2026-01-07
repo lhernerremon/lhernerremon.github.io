@@ -1,38 +1,51 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
-  telemetry: false,
-  compatibilityDate: '2024-04-03',
-  css: ['assets/main.scss'],
-  modules: ['vuetify-nuxt-module', '@nuxt/eslint', '@nuxtjs/google-fonts', '@nuxt/content'],
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/fonts',
+    '@nuxt/ui',
+    '@nuxt/icon',
+    '@nuxt/content',
+    'dayjs-nuxt',
+  ],
+  imports: {
+    dirs: [
+      '@/composables/*/*.ts',
+      '@/stores/*/*.ts',
+    ],
+  },
+
   app: {
     head: {
       title: 'Blog',
       titleTemplate: '%s',
       meta: [
-        { charset: 'utf-8' }
-      ]
+        { charset: 'utf-8' },
+      ],
     },
     pageTransition: { name: 'page', mode: 'out-in' },
   },
 
-  vuetify: {
-    moduleOptions: { styles: 'sass' },
-    vuetifyOptions: './vuetify.config.ts',
+  css: [
+    '@/assets/scss/main.scss',
+    '@/assets/scss/global.css',
+  ],
+
+  content: {
+    build: {
+      markdown: {
+        highlight: {
+          preload: ['python'],
+          theme: 'monokai',
+        },
+      },
+    },
   },
 
-  googleFonts: {
-    display: 'swap',
-    download: true,
-    families: {
-      Poppins: true
-    }
-  },
-  content: {
+  dayjs: {
+    locales: ['es'],
+    plugins: ['utc', 'timezone', 'relativeTime', 'customParseFormat'],
     defaultLocale: 'es',
-    highlight: {
-      preload: ['python'],
-      theme: 'monokai'
-    }
-  }
+    defaultTimezone: 'America/Lima',
+  },
 })
