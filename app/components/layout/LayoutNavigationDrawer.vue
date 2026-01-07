@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 </script>
+
 <template>
   <VNavigationDrawer v-bind="$attrs" temporary>
     <VList>
