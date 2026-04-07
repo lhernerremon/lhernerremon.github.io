@@ -25,3 +25,8 @@ logs
 
 # VSC
 .history
+
+# Claude Code
+.claude/
+.agents/
+skills-lock.json

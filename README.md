@@ -1,75 +1,49 @@
-# Nuxt 3 Minimal Starter
+# lhernerremon.github.io
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Personal blog built with Nuxt 4 and static content.
+
+## Stack
+
+- **Nuxt 4** with `app/` directory convention
+- **@nuxt/ui v4** — UI components (primary: sky)
+- **@nuxt/content v3** — Markdown blog posts with typed frontmatter
+- **@nuxt/icon** + `@iconify-json/mdi` — MDI icons
+- **dayjs** — locale `es`, timezone `America/Lima`
+- **ESLint 10** with `@nuxt/eslint`
 
 ## Setup
 
-Make sure to install the dependencies:
-
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+## Development
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+npm run dev      # http://localhost:3010
+npm run lint     # ESLint (zero warnings)
 ```
 
-## Production
-
-Build the application for production:
+## Build
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+npm run build     # Production build
+npm run generate  # Static site generation
+npm run preview   # Preview production build
 ```
 
-Locally preview production build:
+## Blog posts
 
-```bash
-# npm
-npm run preview
+Posts are Markdown files in `content/blog/`. Required frontmatter:
 
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
+```yaml
+---
+title: string
+description: string
+date: YYYY-MM-DD
+time: string        # e.g. "5 min"
+author: string
+tags:               # optional
+  - tag1
+---
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
