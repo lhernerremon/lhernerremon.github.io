@@ -1,30 +1,38 @@
 <script setup lang="ts">
 import BlogProfile from '@/components/blog/BlogProfile.vue'
+import { VIEW_HOME, VIEW_CATEGORIES } from '@/utils/constants.views'
+
+const route = useRoute()
 
 const items = [
-  {
-    label: 'Blog',
-    to: '/',
-  }, {
-    label: 'Categorías',
-    to: '/categories',
-  },
+  { label: 'Blog', to: VIEW_HOME },
+  { label: 'Categorías', to: VIEW_CATEGORIES },
 ]
 </script>
 
 <template>
-  <UHeader>
-    <template #left>
-      <NuxtLink to="/" class="flex items-center">
-        <BlogProfile width="50" />
-        <p class="text-2xl font-bold">Blog</p>
+  <header class="sticky top-0 z-40 border-b border-default bg-default/80 backdrop-blur">
+    <div class="mx-auto flex h-14 max-w-4xl items-center justify-between gap-4 px-4 sm:px-6">
+      <NuxtLink :to="VIEW_HOME" class="flex items-center gap-2 font-semibold hover:text-primary">
+        <BlogProfile :size="34" alt="" />
+        Blog
       </NuxtLink>
-    </template>
 
-    <UNavigationMenu :items="items" variant="link" />
+      <nav aria-label="Principal" class="flex items-center gap-1">
+        <UButton
+          v-for="item in items"
+          :key="item.to"
+          :to="item.to"
+          :aria-current="route.path === item.to ? 'page' : undefined"
+          :color="route.path === item.to ? 'primary' : 'neutral'"
+          variant="ghost"
+          size="sm"
+        >
+          {{ item.label }}
+        </UButton>
 
-    <template #right>
-      <UColorModeButton />
-    </template>
-  </UHeader>
+        <UColorModeButton class="ml-1" />
+      </nav>
+    </div>
+  </header>
 </template>

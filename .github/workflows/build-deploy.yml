@@ -33,4 +33,5 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist
+          # dist es un symlink absoluto a .output/public; se publica la carpeta real.
+          folder: .output/public

@@ -1,0 +1,5 @@
+# Este proyecto no usa Prettier: el lint y el formato los aplica ESLint (ver docs/conventions.md).
+# Aun así, muchos editores traen un formateador de Markdown activo con formatOnSave. Sobre el
+# contenido hace daño real: escapa los guiones bajos (`_blank` → `\_blank`), reescribe los bloques
+# MDC `::componente` como encabezados y cambia el estilo del código de los ejemplos.
+content/
