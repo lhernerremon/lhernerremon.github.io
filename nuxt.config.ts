@@ -1,8 +1,8 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 const siteUrl = 'https://lhernerremon.github.io'
 const siteName = 'Blog'
 const siteDescription = 'Apuntes sobre desarrollo de software: diseño de APIs, Django, Nuxt y herramientas del día a día.'
 
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
