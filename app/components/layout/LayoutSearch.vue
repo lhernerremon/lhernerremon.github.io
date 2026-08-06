@@ -24,7 +24,8 @@ const search = ref('')
       icon="mdi-magnify"
       size="small"
       color="primary"
-      @click="watchSearch = !watchSearch" />
+      @click="watchSearch = !watchSearch"
+    />
   </div>
 </template>
 

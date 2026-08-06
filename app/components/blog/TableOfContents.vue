@@ -1,11 +1,12 @@
 <script setup lang="ts">
 defineEmits(['scrollTo'])
 const props = defineProps({
-  data: { type: Array, default: () => null }
+  data: { type: Array, default: () => null },
 })
 
 const tocLinks = computed(() => props.data?.body?.toc?.links || [])
 </script>
+
 <template>
   <VNavigationDrawer location="right" floating>
     <VList lines="two">

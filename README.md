@@ -1,75 +1,52 @@
-# Nuxt 3 Minimal Starter
+# Nuxt Blog
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Blog personal construido con [Nuxt](https://nuxt.com/docs/getting-started/introduction) y [@nuxt/content](https://content.nuxt.com).
+
+## Requisitos
+
+- Node.js >= 22
+- pnpm (gestionado con el campo `packageManager` del `package.json`; puedes activarlo con `corepack enable`)
 
 ## Setup
 
-Make sure to install the dependencies:
+Instalar dependencias:
 
 ```bash
-# npm
-npm install
-
-# pnpm
 pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
 ## Development Server
 
-Start the development server on `http://localhost:3000`:
+Levantar el servidor de desarrollo en `http://localhost:3010`:
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+pnpm dev
 ```
 
 ## Production
 
-Build the application for production:
+Generar el sitio estático (lo que se despliega en GitHub Pages, carpeta `dist`):
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+pnpm generate
 ```
 
-Locally preview production build:
+Build para servidor:
 
 ```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
+pnpm build
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Previsualizar el build en local:
+
+```bash
+pnpm preview
+```
+
+## Lint
+
+```bash
+pnpm lint
+```
+
+Consulta la [documentación de despliegue](https://nuxt.com/docs/getting-started/deployment) para más información.
