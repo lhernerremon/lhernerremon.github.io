@@ -1,0 +1,1 @@
+var e=()=>`/profiles/lemon${Math.floor(Math.random()*8)}.png`,t=(e=``)=>{let t=0;for(let n=0;n<e.length;n++)t=(t*31+e.charCodeAt(n))%1e5;return`/profiles/lemon${t%8}.png`},n=`/categories`,r=e=>`${n}/${e}`;export{e as i,r as n,t as r,n as t};

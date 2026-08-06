@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Blog</title>
+    <link>https://lhernerremon.github.io</link>
+    <description>Apuntes sobre desarrollo de software: diseño de APIs, Django, Nuxt y herramientas del día a día.</description>
+    <language>es</language>
+    <item>
+      <title>Migrar de npm a pnpm, y las cuatro cosas que se rompen</title>
+      <link>https://lhernerremon.github.io/blog/migrando-de-npm-a-pnpm</link>
+      <guid isPermaLink="true">https://lhernerremon.github.io/blog/migrando-de-npm-a-pnpm</guid>
+      <description>Cambiar de gestor de paquetes no es solo borrar el package-lock. Los scripts de instalación bloqueados, el node_modules estricto, el cooldown de versiones y la dependencia fantasma que npm te tapaba.</description>
+      <pubDate>Thu, 06 Aug 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Guía de principios en Django con Rest Framework</title>
+      <link>https://lhernerremon.github.io/blog/django-guide</link>
+      <guid isPermaLink="true">https://lhernerremon.github.io/blog/django-guide</guid>
+      <description>Dónde poner la lógica de negocio, cómo nombrar las cosas y qué librerías valen la pena en un proyecto Django con Rest Framework. Los consensos que evitan discutir lo mismo en cada code review.</description>
+      <pubDate>Fri, 08 Dec 2023 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Buenas prácticas en el diseño de una API web</title>
+      <link>https://lhernerremon.github.io/blog/good-practices-design-web-api</link>
+      <guid isPermaLink="true">https://lhernerremon.github.io/blog/good-practices-design-web-api</guid>
+      <description>Sustantivos en lugar de verbos, filtros detrás del signo de interrogación, errores que se entienden y versionado desde el día uno. Los criterios que hacen que una API web se use sin pelear.</description>
+      <pubDate>Sat, 04 Nov 2023 00:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>
