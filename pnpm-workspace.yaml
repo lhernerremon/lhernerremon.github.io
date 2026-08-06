@@ -1,0 +1,16 @@
+minimumReleaseAge: 1440
+resolutionMode: highest
+updateNotifier: false
+engineStrict: true
+saveExact: true
+nodeLinker: hoisted
+
+overrides:
+  vite: '>=8.2.0'
+
+allowBuilds:
+  better-sqlite3: true
+  esbuild: true
+  '@parcel/watcher': true
+  unrs-resolver: true
+  vue-demi: true

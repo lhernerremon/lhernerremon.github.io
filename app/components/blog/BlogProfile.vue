@@ -1,25 +1,33 @@
 <script setup lang="ts">
+import { randomAvatar } from '@/utils/avatar'
+
 withDefaults(defineProps<{
-  width?: number | string
+  size?: number
+  alt?: string
 }>(), {
-  width: 110,
+  size: 56,
+  alt: '',
 })
 
-const { getRandomInt } = useUtils()
-
-const imageUrl = ref('/profiles/lemon.png')
-onMounted(() => {
-  const randomNumber = getRandomInt({ max: 7 })
-  imageUrl.value = `/profiles/lemon${randomNumber}.png`
-})
+// Se resuelve una vez por instancia: así cada tarjeta muestra un limón distinto y estable.
+const src = randomAvatar()
 </script>
 
 <template>
-  <img :src="imageUrl" :width="width" :max-width="width">
+  <img
+    :src="src"
+    :width="size"
+    :height="size"
+    :alt="alt"
+    class="shrink-0 select-none"
+    loading="lazy"
+    decoding="async"
+  >
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 img {
-  filter: drop-shadow(1px 1px 1px var(--ui-primary));
+  filter: drop-shadow(0 3px 6px color-mix(in oklch, var(--ui-primary) 22%, transparent));
+  transition: filter 0.25s ease, transform 0.25s ease;
 }
 </style>

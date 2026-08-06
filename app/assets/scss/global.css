@@ -5,6 +5,38 @@
   --font-sans: "Poppins", apple-system, Ubuntu, Cantarell, sans-serif;
 }
 
-.dark {
-  --shiki-default: #00dc82;
+:root {
+  /* UContentToc y el scroll a anclas se posicionan contra esta variable; la fija AppHeader (h-14). */
+  --ui-header-height: 3.5rem;
+}
+
+:target,
+:where(h2, h3, h4)[id] {
+  scroll-margin-top: calc(var(--ui-header-height) + 1.5rem);
+}
+
+/* Metadatos discretos: fecha, tiempo de lectura, contadores. */
+.meta-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Shiki emite ambos temas; sin esto el bloque de código ignora el modo oscuro. */
+.dark .shiki span {
+  color: var(--shiki-dark) !important;
+}
+.dark .shiki {
+  background-color: var(--ui-bg-elevated) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

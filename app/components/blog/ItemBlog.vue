@@ -1,58 +1,41 @@
 <script setup lang="ts">
+import type { BlogCollectionItem } from '@nuxt/content'
 import BlogProfile from '@/components/blog/BlogProfile.vue'
 
 defineProps<{
-  blog: any
+  blog: BlogCollectionItem
 }>()
 
 const { formatDate } = useDayjsUtils()
 </script>
 
 <template>
-  <UCard variant="subtle">
-    <template #header>
-      <NuxtLink :to="blog.path" class="text-xl text-primary">
-        {{ blog.title }}
-      </NuxtLink>
-    </template>
+  <article class="group relative rounded-xl bg-default p-5 ring ring-default transition-all duration-200 hover:-translate-y-0.5 hover:ring-primary/50 hover:shadow-lg hover:shadow-primary/5 sm:p-6">
+    <div class="flex items-start gap-5">
+      <BlogProfile :size="72" alt="" class="hidden sm:block group-hover:scale-[1.04]" />
 
-    <section class="flex flex-col gap-2">
-      <div class="flex items-center gap-1 -ml-2">
-        <BlogProfile width="40" />
-        <p class="text-lg">
-          {{ blog.author }}
+      <div class="flex min-w-0 flex-col gap-2">
+        <h2 class="text-lg font-semibold leading-snug text-highlighted sm:text-xl">
+          <NuxtLink :to="blog.path" class="transition-colors after:absolute after:inset-0 group-hover:text-primary">
+            {{ blog.title }}
+          </NuxtLink>
+        </h2>
+
+        <p class="line-clamp-2 text-sm text-pretty text-muted">
+          {{ blog.description }}
         </p>
-      </div>
-      <section class="text-muted text-sm flex flex-col gap-1">
-        <div class="flex items-center gap-1">
-          <UIcon name="mdi-calendar" class="size-5" />
-          <p>{{ formatDate(blog.date) }}</p>
-        </div>
-        <div class="flex items-center gap-1">
-          <UIcon name="mdi-clock-time-eight-outline" class="size-5" />
-          <p>{{ blog.time }}</p>
-        </div>
-        <div>
-          <div class="flex flex-wrap gap-2">
-            <UBadge
-              v-for="tag in blog.tags"
-              :key="tag"
-              size="md"
-            >
-              {{ tag }}
-            </UBadge>
-          </div>
-        </div>
-      </section>
-    </section>
-  </UCard>
-</template>
 
-<style scoped lang="scss">
-a {
-  white-space: wrap;
-}
-.tags-container {
-  gap: 5px
-}
-</style>
+        <div class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-dimmed">
+          <BlogProfile :size="24" alt="" class="sm:hidden" />
+          <span class="font-medium">{{ blog.author }}</span>
+          <span aria-hidden="true">·</span>
+          <time :datetime="blog.date">{{ formatDate(blog.date) }}</time>
+          <span aria-hidden="true">·</span>
+          <span>{{ blog.time }}</span>
+        </div>
+
+        <BlogTagList :tags="blog.tags" class="relative z-10 mt-2" />
+      </div>
+    </div>
+  </article>
+</template>

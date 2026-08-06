@@ -1,72 +1,82 @@
 ---
 title: Guía de principios en Django con Rest Framework
-description: Conjunto de principios y consensos para establecer un estándar en el desarrollo de software con Django y Django Rest Framework.
-date: 2023-12-08
-time: 8 min
+description: Dónde poner la lógica de negocio, cómo nombrar las cosas y qué librerías valen la pena en un proyecto Django con Rest Framework. Los consensos que evitan discutir lo mismo en cada code review.
+date: "2023-12-08"
+time: 12 min
 tags:
   - Desarrollo
   - API
   - Django
+  - Buenas prácticas
 author: RrQq
 ---
 
-El objetivo de esta guía no es mostrar una verdad absoluta, sino mostrar un conjunto de principios y consensos para establecer un estándar en el desarrollo de software con Django y Django Rest Framework.
+Esta guía no pretende ser una verdad absoluta. Es un conjunto de acuerdos para que un equipo deje de discutir lo mismo en cada revisión de código y para que cualquiera pueda entrar a un proyecto y saber dónde buscar.
 
-## ¿Qué es lo que buscamos establecer?
+## ¿Qué buscamos establecer?
 
-- Establecer buenas prácticas para el manejo de información dentro de un proyecto django.
-- Establecer un lugar claro para colocar la 'lógica empresarial'.
-- Mantenga el código limpio y fácil de leer. Y que cualquier desarrollador del equipo podrá modificar, actualizar, etc.
-- Establecer consensos para el desarrollo de proyectos de manera transparente.
+- Buenas prácticas para el manejo de información dentro de un proyecto Django.
+- Un lugar claro y predecible donde vive la **lógica de negocio**.
+- Código legible, que cualquier persona del equipo pueda modificar sin miedo.
+- Consensos explícitos, para que las decisiones no dependan de quién hizo el commit.
 
-## Django Cookiecutter
+## Cookiecutter Django
 
-Para proyectos Django, utilizamos la estructura de [Pydanny](https://github.com/cookiecutter/cookiecutter-django){:target="\_blank"}.
+Para proyectos nuevos partimos de la plantilla [cookiecutter-django](https://github.com/cookiecutter/cookiecutter-django). Nuestras elecciones habituales:
 
-- En cuanto al proveedor de la nube, utilizamos AWS.
-- Usamos Docker.
-- Respecto al servidor de correo, otro SMTP.
-- De momento no utilizamos ningún compresor, los proyectos no son open source, ni whitenoise ni sentry.
-- Normalmente eliminamos la biblioteca django-debug-toolbar de la configuración del proyecto local.
+- Proveedor de nube: **AWS**.
+- **Docker** desde el inicio.
+- Servidor de correo: otro SMTP.
+- Sin compresor, sin whitenoise y sin Sentry (los proyectos no son open source).
+- Normalmente sacamos `django-debug-toolbar` de la configuración local.
 
-## Considerar
+## Antes de escribir código
 
-### Configuración previa
+### Linter y formateador
 
-En la documentación de [Django Cookiecutter](https://github.com/cookiecutter/cookiecutter-django){:target="\_blank"}. viene configurado con un linter como [Flake8](https://pypi.org/project/flake8/){:target="\_blank"} y con un formateador como [Black](https://pypi.org/project/black/){:target="\_blank"}.
+La plantilla ya viene con las herramientas configuradas. Hoy eso significa **[Ruff](https://docs.astral.sh/ruff/)**, que reemplaza a Flake8 y a Black en una sola herramienta y corre bastante más rápido.
 
-Para aprovechar el uso del linter Flake8(PyCharm, VsCode), necesitamos configurar nuestro editor de código para usar este linter para Python. Lo mismo ocurre con Black ([PyCharm](https://black.readthedocs.io/en/stable/integrations/editors.html#pycharm-intellij-idea){:target="\_blank"} y [VsCode](https://dev.to/adamlombard/how-to-use-the-black-python-code-formatter-in-vscode-3lo0){:target="\_blank"}).
+Si vienes de proyectos con Flake8 + Black + isort por separado, el cambio no es traumático: las reglas son las mismas, la configuración se unifica en `pyproject.toml`.
 
-- Lo ideal es que al guardar un cambio se revise la sintaxis y se formatee nuestro código.
-- Con negro utilizamos 129 caracteres como longitud de línea.
-- Otra forma de utilizar la sintaxis de verificación es mediante la confirmación previa.
-- Para activar la configuración previa a la confirmación en el proyecto, ejecute este comando:
+```toml [pyproject.toml]
+[tool.ruff]
+line-length = 129
 
-```sh [Terminal] meta-info=val
+[tool.ruff.lint]
+select = ["E", "F", "I", "DJ", "UP"]
+```
+
+Configura tu editor (PyCharm o VS Code) para que al guardar revise la sintaxis y formatee. Es la diferencia entre discutir espacios en un PR y no volver a hablar del tema.
+
+La otra red de seguridad es **pre-commit**, que corre esas mismas herramientas antes de dejarte commitear:
+
+```sh [Terminal]
 pre-commit install
 ```
 
-En general se ejecutan módulos como flake8, isort, black, etc. Si desea cambiar algo de esto, consulte el archivo `.pre-commit-config.yaml`.
+Lo que se ejecuta está en `.pre-commit-config.yaml`. Si quieres agregar o quitar algo, es ahí.
 
-### Información previa
+### Cómo nombramos las cosas
 
-**El Directorio de Aplicaciones de Django** guarda los modelos que están relacionados, debe escribirse en **plural** y en **minúsculas**. Por ejemplo `users`.
+**Las aplicaciones de Django** agrupan modelos relacionados. Van en **plural** y **minúsculas**: `users`.
 
-Los nombres de los **modelos** deben estar en **singular** y en **PascalCase**. Por ejemplo `Ticket`.
+Los **modelos** en **singular** y **PascalCase**: `Ticket`.
 
-**Los campos** deben ser **singulares** y estar en **Snake_case**. Por ejemplo `price_type`.
+Los **campos** en **singular** y **snake_case**: `price_type`.
 
-**Las funciones** deben comenzar con un verbo y estar en **snake_case**. Por ejemplo `get_related_tickets`.
+Las **funciones** empiezan con un verbo y van en **snake_case**: `get_related_tickets`.
+
+Esa última regla aplica también a las tareas de Celery y a los métodos de los serializers. Es fácil que se cuele un `sendEmail` cuando vienes de escribir JavaScript el mismo día.
 
 ## Configuración
 
-En cuanto a la configuración predeterminada de Django Cookiecutter, agregamos algunas bibliotecas relacionadas como estas:
+Sobre lo que trae Cookiecutter, agregamos estas librerías.
 
 ### Django CamelCase
 
-[Django REST Framework JSON CamelCase](https://github.com/vbabiy/djangorestframework-camel-case){:target="\_blank"} para obtener una salida y entrada del analizador Json con formato CamelCase.
+[djangorestframework-camel-case](https://github.com/vbabiy/djangorestframework-camel-case) traduce entre el `snake_case` de Python y el `camelCase` que espera el front, en los dos sentidos.
 
-```py [settings.py] meta-info=val
+```py [settings.py]
 REST_FRAMEWORK = {
     ...
     "DEFAULT_RENDERER_CLASSES": ("djangorestframework_camel_case.render.CamelCaseJSONRenderer",),
@@ -82,137 +92,134 @@ REST_FRAMEWORK = {
 }
 ```
 
+Un detalle que muerde: `COERCE_DECIMAL_TO_STRING = False` hace que los decimales viajen como números JSON. Gana comodidad en el front y pierdes precisión en montos grandes, porque JSON usa punto flotante. Si estás modelando plata, piénsalo dos veces antes de copiarlo.
+
 ### Dj Rest Auth
 
-[Dj-Rest-Auth](https://github.com/iMerica/dj-rest-auth){:target="\_blank"} nos proporciona puntos finales API directos para manejar de forma segura la autenticación en Django.
-Si necesitamos cambiar un [serializador](https://dj-rest-auth.readthedocs.io/en/latest/configuration.html){:target="\_blank"} predeterminado, podemos usar:
+[dj-rest-auth](https://github.com/iMerica/dj-rest-auth) te da los endpoints de autenticación resueltos. Si necesitas cambiar un serializer, la configuración va agrupada bajo `REST_AUTH`:
 
-```py [settings.py] meta-info=val
-REST_AUTH_SERIALIZERS = {
+```py [settings.py]
+REST_AUTH = {
     "LOGIN_SERIALIZER": "folder_api.users.api.serializers.MyLoginSerializer",
 }
 ```
 
+> Si encuentras ejemplos con `REST_AUTH_SERIALIZERS` en un diccionario aparte, son de versiones antiguas. Esa forma quedó obsoleta.
+
 ### Django Model Utils
 
-[Django Model Utils](https://github.com/jazzband/django-model-utils){:target="\_blank"} nos proporciona utilidades para modelos y campos. Entre estos tenemos un modelo abstracto para manejar las fechas de creación y modificación.
+[django-model-utils](https://github.com/jazzband/django-model-utils) trae utilidades para modelos y campos. La que más usamos es el modelo abstracto que maneja fechas de creación y modificación:
 
-```py [models.py] meta-info=val
+```py [models.py]
 from model_utils.models import TimeStampedModel
 from model_utils.fields import UUIDField
 
 class Ticket(TimeStampedModel):
-  uuid = UUIDField(primary_key=True, version=4, editable=False)
-  ...
+    uuid = UUIDField(primary_key=True, version=4, editable=False)
+    ...
 ```
 
-### Django URL Filter
+### Filtros por URL
 
-[Django Url Filter](https://pypi.org/project/django-url-filter/){:target="\_blank"} nos proporciona una interfaz URL simple para filtrar datos, entre campos y relaciones.
+Para filtrar por campos y relaciones desde el query string usamos **[django-filter](https://django-filter.readthedocs.io/)**.
 
-- Si necesitas agregarlo dentro de una acción, puedes hacerlo de esta manera:
-
-```py [views.py] meta-info=val
-from url_filter.integrations.drf import DjangoFilterBackend
+```py [views.py]
+from django_filters.rest_framework import DjangoFilterBackend
 
 class TicketViewSet(GenericViewSet):
     ...
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ["uuid"]
-    ...
+    filterset_fields = ["uuid", "code"]
+
     @action(detail=False, methods=["GET"])
     def defeated(self, request):
-        productos = self.filter_queryset(self.get_queryset())
+        tickets = self.filter_queryset(self.get_queryset())
         ...
 ```
 
+> En proyectos viejos vas a encontrar `django-url-filter` con `filter_fields`. Está sin mantenimiento hace años; en proyectos nuevos, `django-filter`.
+
 ### Storages
 
-[Django Storages](https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html){:target="\_blank"} nos proporciona un conjunto de backends de almacenamiento para Django. Estos backends proporcionan compatibilidad con el almacenamiento de archivos en Amazon S3, Azure Storage, Google Cloud Storage, etc.
+[django-storages](https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html) conecta los archivos de Django con S3, Azure o GCS. La configuración la mantenemos en `utils/storages.py`.
 
-La configuración la podemos mantener dentro de un archivo `storages.py` dentro de la carpeta utils.
+Desde Django 4.2 los backends se declaran en `STORAGES`:
 
-- Generalmente permitimos que los archivos estáticos sean legibles públicamente:
+```py [settings.py]
+STORAGES = {
+    "default": {"BACKEND": "folder_api.utils.storages.PublicMediaS3Boto3Storage"},
+    "staticfiles": {"BACKEND": "folder_api.utils.storages.StaticRootS3Boto3Storage"},
+}
+```
 
-```py [settings.py] meta-info=val
+Y las clases:
+
+```py [storages.py]
 class StaticRootS3Boto3Storage(S3Boto3Storage):
     location = "static"
-    default_acl = "public-read"
-```
 
-- En el caso de mantener los archivos multimedia legibles públicamente:
-
-```py [settings.py] meta-info=val
 class PublicMediaS3Boto3Storage(S3Boto3Storage):
     location = "media"
-    default_acl = "public-read"
     file_overwrite = False
-```
 
-- Pero en caso de que necesite crear una carpeta con archivos multimedia privados.
-
-```py [settings.py] meta-info=val
 class PrivateMediaS3Boto3Storage(S3Boto3Storage):
     location = "media-private"
-    default_acl = "private"
     file_overwrite = False
     querystring_auth = True
     querystring_expire = 60 * 60 * 12
     region_name = "us-east-2"
 ```
 
-**Nota:** También necesita un `handler` y usarlo para cada campo en el que lo usará.
+**Cuidado con las ACL.** Los ejemplos que circulan usan `default_acl = "public-read"`. Los buckets creados hoy vienen con las ACL deshabilitadas por defecto (_Bucket owner enforced_), así que esa línea revienta al subir el archivo. El acceso público se resuelve con una **policy del bucket**, no con la ACL del objeto.
 
-- Deberá crear uno nuevo, como este:
+Para los archivos privados necesitas un `handler` que no te complique el desarrollo local ni las migraciones:
 
-```py [settings.py] meta-info=val
-def handlerPrivateStorage():
+```py [storages.py]
+def handler_private_storage():
     if settings.DEBUG:
         return None
     return PrivateMediaS3Boto3Storage()
 ```
 
-- Y dentro del modelo usarlo de esta manera para no afectar los archivos de desarrollo local y migración.
-
-```py [models.py] meta-info=val
+```py [models.py]
 class Ticket(TimeStampedModel):
     ...
-    image = models.FileField(..., storage=handlerPrivateStorage())
+    image = models.FileField(..., storage=handler_private_storage)
 ```
+
+Pasa la función **sin llamarla**: Django la evalúa de forma perezosa y así el backend no queda congelado dentro de la migración.
 
 ## Modelos
 
-Para hacer algunas demostraciones, mostraremos un ejemplo. La **lógica del negocio** nos dice que muchos usuarios pueden utilizar un ticket.
+Vamos con un ejemplo. La **lógica de negocio** dice que muchos usuarios pueden usar un ticket.
 
-```py [models.py] meta-info=val
-class Ticket(TimeStampedModel):
-    code = models.CharField(max_length=10, unique=True)
-    user = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name="tickets")
-    usage_limit = models.PositiveSmallIntegerField(default=1)
-
-    # created: Is a field provided by TimeStampedModel
-    # modified: Is a field provided by TimeStampedModel
-
+```py [models.py]
 class User(TimeStampedModel):
     ...
     name = models.CharField(max_length=32)
 
-    # created: Is a field provided by TimeStampedModel
-    # modified: Is a field provided by TimeStampedModel
+class Ticket(TimeStampedModel):
+    code = models.CharField(max_length=10, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tickets")
+    usage_limit = models.PositiveSmallIntegerField(default=1)
+
+    # created y modified los aporta TimeStampedModel
 ```
 
-Primero debemos definir algunas características que tendrán los modelos, tales como: campos, valores únicos, consultas, propiedades y métodos.
+Primero definimos qué tendrá el modelo: campos, valores únicos, consultas, propiedades y métodos.
 
 ### Managers
 
-Los managers nos permiten crear consultas personalizadas para nuestros modelos. Por ejemplo, si queremos obtener todos los tickets que no han sido utilizados, podemos crear un manager personalizado para esto.
+Los managers permiten crear consultas reutilizables y controlar cómo se crean las instancias.
 
-- Para definir los campos necesitamos toda la información sobre el funcionamiento del negocio, para este ejemplo tendremos solo estos: `code`, `user` y `usage_limit`.
-- El modelo Ticket tiene un campo que es único y debe ser creado y asignado a cada instancia una sola vez, para esto tenemos 2 opciones.
-  - Coloque esa lógica en el método `save()`, que se utiliza mejor cuando tenemos un valor que necesitamos recalcular o generar cada vez que guardamos cambios en el modelo.
-  - Utilizar los `manager de Django`, que nos permite utilizar un método `create()`, que se ejecutará solo una vez.
+Para el ejemplo tenemos tres campos: `code`, `user` y `usage_limit`. El `code` es único y debe generarse una sola vez, al crear. Ahí hay dos caminos:
 
-```py [manager.py] meta-info=val
+- Poner la lógica en `save()`. Sirve cuando el valor se recalcula **cada vez** que guardas.
+- Usar un **manager** con un `create()` propio, que corre **solo al crear**.
+
+Como el código no debe cambiar nunca más, el manager es lo correcto:
+
+```py [managers.py]
 class TicketManager(models.Manager):
 
     CODE_LENGTH = 10
@@ -225,7 +232,9 @@ class TicketManager(models.Manager):
         return super().create(*args, **kwargs)
 ```
 
-**Nota:** Para acceder a la función `generate_random_code(length),` debemos colocarla dentro de `utilities.py` ya que es una función de utilidad.
+Ese `while` tiene una condición de carrera: entre el `exists()` y el `create()` otro proceso puede insertar el mismo código. Con `unique=True` la base te protege igual, pero conviene atrapar el `IntegrityError` y reintentar.
+
+La función `generate_random_code(length)` vive en `utilities.py`, porque es una utilidad y no pertenece a ningún modelo:
 
 ```console
 folder_api
@@ -239,74 +248,74 @@ folder_api
 ...
 ```
 
-Los `manager de Django` también se pueden utilizar para definir consultas que se utilizarán constantemente. [Más información](https://docs.djangoproject.com/en/4.2/topics/db/managers/#custom-managers){:target="\_blank"}.
+Los managers también sirven para nombrar consultas que se repiten. [Más información](https://docs.djangoproject.com/en/stable/topics/db/managers/#custom-managers).
 
-```py [manager.py] meta-info=val
+```py [managers.py]
 class TicketManager(models.Manager):
     ...
     def tickets_starting_with_a(self):
         return self.get_queryset().filter(code__istartswith="a")
-
-    def tickets_starting_with_b(self):
-        return self.get_queryset().filter(code__istartswith="b")
-    ...
 ```
 
-## Funciones
+## Dónde va cada función
 
-Las funciones son una forma de encapsular la lógica de negocio que no pertenece a un modelo específico.
+La regla corta: **si la operación necesita una instancia, es un método del modelo**.
 
-Si necesita una búsqueda más compleja de objetos relacionados desde una única instancia del modelo, hágalo como un método dentro de la clase del modelo.
+Búsqueda compleja de objetos relacionados desde una instancia:
 
-```py [models.py] meta-info=val
+```py [models.py]
 from django.contrib.postgres.search import TrigramSimilarity
 
 class Ticket(TimeStampedModel):
     ...
     def get_related_tickets(self):
-        return Ticket.objects.annotate(similarity=TrigramSimilarity("code", self.code))
+        return (
+            Ticket.objects.annotate(similarity=TrigramSimilarity("code", self.code))
             .order_by("-similarity")
             .filter(similarity__gt=0.2)
             .exclude(id=self.id)
+        )
 ```
 
-Si necesita desarrollar la lógica para alguna operación para una única instancia del modelo, hágalo como un método dentro de la clase del modelo.
+> Los paréntesis alrededor del queryset no son decoración: sin ellos el encadenamiento en varias líneas es un error de sintaxis.
 
-```py [models.py] meta-info=val
+Operación sobre una sola instancia:
+
+```py [models.py]
 class User(TimeStampedModel):
     ...
     def get_tickets(self):
         return self.tickets.all()
 ```
 
-Si necesita desarrollar la lógica para alguna operación para una única instancia de modelo y también necesita campos adicionales, hágalo como un método dentro de la clase de modelo.
+Operación sobre una instancia que además necesita datos externos:
 
-```py [models.py] meta-info=val
+```py [models.py]
 class Ticket(TimeStampedModel):
     ...
     def get_user_used(self, user):
         return self.user_id == user.id
 ```
 
-Si necesita desarrollar lógica para cualquier instancia del modelo, pero está relacionada con el modelo, hágalo como un método dentro de la clase del modelo.
+Y cuando la lógica pertenece al modelo pero no a una instancia concreta, un `staticmethod`:
 
-```py [models.py] meta-info=val
+```py [models.py]
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 
 class Ticket(TimeStampedModel):
     ...
     @staticmethod
     def get_filtered_tickets(code):
-        # Search and ranking to order by relevance
+        # Ranking por relevancia, no solo coincidencia
         vector = SearchVector("code")
         return Ticket.objects.annotate(rank=SearchRank(vector, SearchQuery(code))).order_by("-rank")
 ```
 
 ### Property
 
-Este decorador debe usarse para devolver variaciones de campos existentes.
+El decorador `@property` es para devolver variaciones de campos que ya existen. Nada de consultas adentro: un `property` que va a la base se convierte en un problema de N+1 apenas lo uses en un serializer sobre una lista.
 
-```py [models.py] meta-info=val
+```py [models.py]
 class Ticket(TimeStampedModel):
     ...
     @property
@@ -317,14 +326,13 @@ class Ticket(TimeStampedModel):
     def days_since_creation(self):
         today = timezone.localdate()
         return (today - self.created.date()).days
-
 ```
 
 ## Django Rest Framework
 
 ### Estructura de carpetas
 
-Dentro de cada aplicación de django debe existir una carpeta api y dentro de ella sus respectivos archivos como: `views.py`, `serializers.py`, `urls.py`, `pagination.py`, etc.
+Dentro de cada aplicación va una carpeta `api` con sus archivos:
 
 ```console
 users
@@ -338,15 +346,14 @@ users
 ...
 ```
 
-Dentro de `urls.py`, DRF `router.urls` debe ser el mismo que `urlpatterns`.
-Dentro del archivo `api_router.py` incluya la referencia de cada `urls.py`.
+En `urls.py`, el `router.urls` de DRF debe ser el mismo que `urlpatterns`. En `api_router.py` incluyes la referencia de cada `urls.py`:
 
-```py [urls.py] meta-info=val
+```py [urls.py]
 from django.urls import include
 
 urlpatterns += [
     ...
-    path("", include("folder_api.app.api.urls"))
+    path("", include("folder_api.app.api.urls")),
 ]
 ```
 
@@ -354,29 +361,31 @@ urlpatterns += [
 
 ### Celery
 
-Django Cookiecutter ya viene con una implementación de Celery, en la que dentro de cada aplicación de Django definimos un archivo llamado `task.py` y dentro de él colocamos funciones que se ejecutarán en segundo plano con el decorador de apio `@celery_app.task`.
+Cookiecutter ya trae Celery configurado. En cada aplicación defines un `tasks.py` con las funciones que corren en segundo plano, decoradas con `@celery_app.task`:
 
-```py [settings.py] meta-info=val
+```py [tasks.py]
 from config.celery_app import app as celery_app
 
 @celery_app.task
-def sendEmail(user_id):
+def send_email(user_id):
     ...
     msg = EmailMultiAlternatives(...)
     msg.send()
 ```
 
-La forma más sencilla de hacer uso de estas funciones es llamando a la función y con el método `delay()` le pasamos los parámetros correspondientes.
+Para usarlas, llamas a la función con `delay()`:
 
-```py [serializers.py] meta-info=val
-from folder_api.users.task import sendEmail
+```py [serializers.py]
+from folder_api.users.tasks import send_email
 
 class SignUpSerializer(serializers.Serializer):
     ...
     def create(self, validated_data):
         ...
-        sendEmail.delay(user.id)
+        send_email.delay(user.id)
         ...
 ```
 
-**Nota:** Para poder programar tareas periódicas, puedes usar el administrador de django y usar la biblioteca [django-celery-beat](https://github.com/celery/django-celery-beat){:target="\_blank"}.
+Fíjate que se pasa `user.id` y no el objeto `user`. La tarea viaja serializada hasta el worker, así que manda identificadores y vuelve a consultar allá; si mandas el objeto completo, el worker puede terminar trabajando con datos viejos.
+
+**Nota:** para tareas periódicas desde el admin, [django-celery-beat](https://github.com/celery/django-celery-beat).
